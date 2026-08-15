@@ -59,6 +59,189 @@
   pass — real-API run this session had no `ANTHROPIC_API_KEY` set and
   failed gracefully as designed [caught, recorded in trace `errors`,
   script did not crash])
+- Milestone 9A — Tool-calling agent core — COMPLETE
+  (631 passed / 0 failed; second concrete architecture, `ToolCallingAgent`
+  [`src/agents/tool_agent.py`]: a bounded multi-turn tool-calling loop
+  [`MAX_TOOL_ITERATIONS = 6`] drives an LLM against five validated,
+  LLM-callable tool schemas [`src/agents/tool_schemas.py`: `get_games`,
+  `get_game`, `get_odds`, `get_sportsbook_odds`, `find_best_line`] that
+  thinly wrap the existing `SportsbookTools` -> `OddsProvider` layer,
+  never reimplemented; `src/agents/llm_client.py` gained a
+  `ToolCallingLLMClient` protocol [`create_turn`] implemented by the
+  same `AnthropicLLMClient` class the RAG-only agent uses — one client
+  class, one model/max_tokens/effort configuration, one secret path,
+  shared across both architectures; the final `BettingAnalysis` is built
+  exclusively from the actual Pydantic objects each tool call returned
+  [an internal `market_state`], never from the LLM's prose, so a
+  hallucinated final claim cannot reach the output [verified: tool
+  returns +120, LLM's final text claims +180, output remains +120];
+  redundant tool calls flagged not hidden, tool failures [unknown
+  sportsbook/game/market/outcome] recorded explicitly with no
+  substitution, loop-bound violations raise typed `ToolAnalysisIncomplete`
+  [mirrors `RagAnalysisIncomplete`] rather than fabricating a result;
+  full `ToolAgentTrace` recorded per run [tool calls with
+  arguments/success/redundancy/latency, call order, redundant-call
+  count, validation/quant status, LLM-decision/tool-execution/quant/
+  total latencies, errors]; architecture isolation from
+  `src.rag`/ground-truth files verified by AST-based tests; unit tests
+  use only a fake `ToolCallingLLMClient` — no paid API calls;
+  `experiments/run_tool_agent_smoke_test.py` is the manual,
+  credential-gated real-API smoke test [sportsbook data source remains
+  the controlled provider throughout — only the LLM call is real], not
+  run in CI, not required to pass — real-API run this session had no
+  `ANTHROPIC_API_KEY` set and failed gracefully as designed [connectivity
+  probe caught the auth error, printed "REAL LLM SMOKE TEST: NOT RUN",
+  script did not crash])
+- Milestone 9B — Tool-calling agent end-to-end verification — COMPLETE
+  (668 passed / 0 failed; end-to-end evaluation harness
+  [`src/evaluation/tool_agent_evaluation.py`]: `evaluate_scenario()`/
+  `evaluate_scenarios()` drive the unmodified `ToolCallingAgent` against
+  an 11-scenario representative controlled-benchmark subset [positive/
+  negative/mixed-sign odds, a best-line tie (S007), a missing-sportsbook
+  case (S008), a current/stale freshness case (S009), moneyline/spread/
+  total markets, quant-evaluable positive- and negative-EV cases] and
+  compare against `GroundTruth`/`QuantGroundTruth` entirely outside the
+  agent — ground truth never enters an `AgentRequest`, tool prompt, tool
+  result, LLM message, or quant input [AST-enforced: `src/agents/
+  tool_agent.py`/`tool_schemas.py` forbidden from importing
+  `src.evaluation`]; set-based tie semantics for best-line accuracy,
+  exact-integer odds comparison, unrounded `abs()` EV/reference-
+  probability error; `ExecutionStatus` gives 8 explicit failure/outcome
+  categories, never a generic "error"; independent hallucination
+  re-check re-queries `SportsbookTools` directly rather than trusting
+  the agent's own trace; `DeterministicToolPolicyLLMClient` is a
+  request-driven fake-LLM policy that never reads ground truth
+  [discover game -> gather requested outcome -> gather opposing outcome
+  if moneyline -> stop]; on the 11-scenario default set: 100%
+  best-line/best-odds/EV-classification/freshness accuracy, 0.0 mean EV
+  and market-reference absolute error, 100% completeness, 0%
+  hallucination rate, reproducible byte-for-byte [excluding latency]
+  across repeated runs, confirmed via two independent full-suite runs;
+  `python -m src.evaluation.tool_agent_evaluation` [`--json` optional]
+  is the evaluation command; `experiments/
+  run_tool_agent_real_llm_evaluation.py` is the manual, credential-gated
+  5-scenario real-API evaluation [not part of the automated suite, never
+  affects pytest pass/fail — no `ANTHROPIC_API_KEY` set this session,
+  printed "REAL LLM EVALUATION: NOT RUN" and exited cleanly];
+  RAG-vs-tool `AgentRequest`/`BettingAnalysis` contract parity confirmed;
+  no hybrid agent implemented)
+- Milestone 10A — Hybrid RAG + tool-calling agent core — COMPLETE
+  (710 passed / 0 failed; third and final concrete architecture,
+  `HybridAgent` [`src/agents/hybrid_agent.py`] — the only agent module
+  permitted to access both RAG evidence and sportsbook tools; reuses
+  every existing component verbatim [`build_rag_evidence_bundle`/
+  `render_rag_context`, `RAG_EXTRACTION_SYSTEM_PROMPT`/
+  `ExtractedMarketEvidence`/`validate_extraction_provenance`,
+  `TOOL_SCHEMAS`/`execute_tool`/`TOOL_AGENT_SYSTEM_PROMPT`/
+  `MAX_TOOL_ITERATIONS`] — nothing duplicated; new pure-Python
+  `src/agents/hybrid_reconciliation.py` [`HybridMarketRecord`/
+  `reconcile_outcome`] deterministically decides per (sportsbook,
+  outcome) which of a RAG-derived and tool-derived price is
+  authoritative [current tool data always wins; current-RAG-only used
+  only with zero tool coverage; stale/unknown-freshness RAG-only never
+  promoted; every conflict recorded with an explicit
+  `ConflictResolutionReason`, never averaged]; shared quant engine
+  consumes only `authoritative_odds`, never a raw source field directly,
+  so a hallucinated LLM claim structurally cannot reach the final
+  numbers [verified: tool returns +120, LLM's final text claims +180,
+  output remains +120]; `BettingAnalysis.sources` populated with exactly
+  what fed the final numbers; full `HybridAgentTrace` per run
+  [RAG doc IDs/scores/latency, complete tool-call trace, every
+  reconciled record, source agreement/conflict/RAG-only/tool-only
+  counts, explicit `HybridFailureCategory` (8 values, never a generic
+  "error")]; graceful degradation verified [RAG failure alone doesn't
+  fail the agent if tools suffice; tool failure alone never promotes
+  stale RAG data; both failing raises typed `HybridAnalysisIncomplete`];
+  RAG-only and tool-calling agents verified byte-for-byte unmodified,
+  their original single-channel import boundaries intact
+  [AST-enforced]; unit tests use only a fake combined LLM client — no
+  paid API calls; `experiments/run_hybrid_agent_smoke_test.py` is the
+  manual, credential-gated real-API smoke test [not run in CI, not
+  required to pass — no `ANTHROPIC_API_KEY` set this session, printed
+  "REAL LLM HYBRID SMOKE TEST: NOT RUN" and exited cleanly])
+- Milestone 10B — Hybrid agent end-to-end verification — COMPLETE
+  (743 passed / 0 failed; end-to-end evaluation harness
+  [`src/evaluation/hybrid_agent_evaluation.py`]: `evaluate_scenario()`/
+  `evaluate_scenarios()` drive the unmodified `HybridAgent` against the
+  same 11-scenario representative subset used for the tool-calling
+  evaluator [Milestone 9B], reusing rather than redefining its metric
+  primitives [`DEFAULT_SCENARIO_IDS`, `_stale_odds_by_scenario_key`,
+  `_detect_hallucination`, `_rate`/`_mean`] so cross-architecture
+  comparison never has to reconcile incompatible definitions;
+  `execution_status` reuses `HybridAgentTrace`'s own
+  `HybridFailureCategory` enum directly; hybrid-specific metrics added
+  [RAG/tool agreement/conflict counts, correct-conflict-resolution
+  count, conflict-resolution accuracy (undefined not zero with no
+  conflicts), stale-RAG-conflict count, a stale-RAG-incorrectly-
+  promoted regression guard, tool-only-recovery/RAG-only-observed
+  counts, source-reconciliation-failure flag]; freshness judged at the
+  final authoritative-market-state level, not merely "was current data
+  seen somewhere in the trace"; `DeterministicHybridPolicyLLMClient`
+  composes `DeterministicToolPolicyLLMClient` [Milestone 9B, reused
+  verbatim] for tool orchestration and adds a deterministic RAG-context
+  parser that never reads ground truth; a real bug in that parser
+  [cross-game retrieval noise mistaken for a same-game "opposing
+  outcome," caught via a live 11-scenario run, not a defect in any
+  Milestone 10A agent code] was found and fixed by scoping extraction to
+  the requesting game's own `game_id`; on the 11-scenario default set:
+  100% best-line/best-odds/EV-classification/freshness/conflict-
+  resolution accuracy, 0.0 mean EV and market-reference absolute error,
+  0 stale-RAG-incorrectly-promoted, 0% hallucination rate, reproducible
+  byte-for-byte [excluding latency] across repeated runs, confirmed via
+  two independent full-suite runs; `python -m
+  src.evaluation.hybrid_agent_evaluation` [`--json` optional] is the
+  evaluation command; `experiments/
+  run_hybrid_agent_real_llm_evaluation.py` is the manual, credential-
+  gated 5-scenario real-API evaluation [not part of the automated suite,
+  never affects pytest pass/fail — no `ANTHROPIC_API_KEY` set this
+  session, printed "REAL LLM HYBRID EVALUATION: NOT RUN" and exited
+  cleanly]; RAG-only/tool-calling/hybrid `AgentRequest`→`BettingAnalysis`
+  contract parity and all three architectures' access-boundary isolation
+  re-verified intact; full architecture experiment runner intentionally
+  NOT implemented yet)
+- Milestone 11 — Unified evaluation framework — COMPLETE
+  (849 passed / 0 failed; new `src/evaluation/metrics.py` — one shared
+  metric layer used identically by all three per-architecture
+  evaluators, eliminating architecture-specific reimplementations of
+  the same formula; reuses `src.models.ArchitectureType` directly as
+  the one canonical identifier; unified `FailureCategory` taxonomy [14
+  values]; pure metric formulas [`best_line_correct` set-based tie
+  semantics, `best_odds_correct` exact-integer, `ev_classification_
+  correct`/`ev_absolute_error`/`market_reference_absolute_error`
+  unrounded and `None`-not-zero when inapplicable, `evaluate_freshness`
+  judged from the final authoritative value with an explicit known-
+  stale-value-match diagnostic, `completeness`, `unsupported_claim_
+  rate`]; consistency metric [`ConsistencySignature`/
+  `compute_consistency`, modal-signature-count/total-runs, excludes
+  latency/reasoning text — defined and unit-tested here, Milestone 12
+  will exercise it with real repeated runs]; N/A-aware generic
+  aggregation [`rate`/`mean`/`median`/`population_stdev`/`minimum`/
+  `maximum`]; common per-run result [`EvaluationResult`] +
+  `MetricApplicability` table [retrieval-quality Recall@K/Hit@K
+  deliberately kept separate, still owned by `src/rag/
+  evaluate_retrieval.py`]; `ArchitectureSummary` [preserves full raw
+  per-run results] + `ArchitectureComparison` [data only, no automatic
+  "winner"]; `tool_agent_evaluation.py`/`hybrid_agent_evaluation.py`
+  refactored to call the shared functions internally [own result
+  models/field names/all pre-existing tests unchanged], each gained
+  `to_common_result()`; a real bug was found and fixed in the shared
+  RAG-extraction fake-LLM parser [`extract_honest_rag_evidence`]:
+  multiple retrieved documents for the same (sportsbook, outcome) — e.g.
+  a stale snapshot and a higher-ranked current one — let the
+  later-parsed one silently win; now the highest-ranked (first-seen)
+  document wins, a deterministic relevance tie-break, not a thumb on
+  the scale toward "current"; new `src/evaluation/rag_agent_evaluation.py`
+  fills the previously-noted gap [RAG-only had no dedicated evaluator],
+  same shape as tool/hybrid, `execution_status` typed directly as the
+  shared `FailureCategory`, evaluated at `RAG_EVALUATION_TOP_K=10`
+  [evaluation-configuration choice, `RagOnlyAgent`'s own
+  `DEFAULT_RAG_TOP_K=5` default unmodified]; on the shared 11-scenario
+  set, all three architectures now reach 100% best-line/best-odds/
+  EV-classification/freshness accuracy and 0% hallucination rate,
+  byte-for-byte [excluding latency] reproducible; a full RAG/TOOL/HYBRID
+  `ArchitectureComparison` round-trips through JSON with per-run results
+  preserved and no winner declared; no experiment runner, statistical
+  significance claim, or dashboard added)
 
 Detailed verification reports for each milestone were produced at the
 time of completion (final report blocks in the session transcript for

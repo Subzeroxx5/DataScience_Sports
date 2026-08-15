@@ -14,10 +14,12 @@
 7B   Integrate quant reference probabilities into ground truth COMPLETE
 8A   RAG evidence pipeline and agent contract          COMPLETE
 8B   RAG-only LLM agent and structured quant analysis  COMPLETE
-9    Tool-calling agent                                CURRENT
-10   Hybrid agent
-11   Evaluation framework
-12   Experiment runner
+9A   Tool-calling agent core                           COMPLETE
+9B   Tool-calling agent end-to-end verification        COMPLETE
+10A  Hybrid RAG + tool-calling agent core               COMPLETE
+10B  Hybrid agent end-to-end verification               COMPLETE
+11   Unified evaluation framework                       COMPLETE
+12   Controlled experiment runner                        CURRENT
 13   Dashboard / visualization
 14   Full controlled experiment + statistical analysis
 15   Research conclusions / manuscript / presentation
