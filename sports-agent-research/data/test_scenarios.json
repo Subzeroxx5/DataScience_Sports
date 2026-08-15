@@ -1,0 +1,305 @@
+[
+  {
+    "category": [
+      "positive_odds",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.55,
+    "game": {
+      "away_team": "Boston Celtics",
+      "game_id": "G-2026-001",
+      "home_team": "Los Angeles Lakers",
+      "sport": "basketball",
+      "start_time": "2026-08-15T19:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Los Angeles Lakers"
+    },
+    "scenario_id": "S001"
+  },
+  {
+    "category": [
+      "negative_odds",
+      "negative_ev",
+      "moneyline",
+      "hand_verified_negative"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.4,
+    "game": {
+      "away_team": "Phoenix Suns",
+      "game_id": "G-2026-002",
+      "home_team": "Golden State Warriors",
+      "sport": "basketball",
+      "start_time": "2026-08-15T20:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Golden State Warriors"
+    },
+    "scenario_id": "S002"
+  },
+  {
+    "category": [
+      "mixed_sign_odds",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.5,
+    "game": {
+      "away_team": "Miami Heat",
+      "game_id": "G-2026-003",
+      "home_team": "Milwaukee Bucks",
+      "sport": "basketball",
+      "start_time": "2026-08-16T19:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Milwaukee Bucks"
+    },
+    "scenario_id": "S003"
+  },
+  {
+    "category": [
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.45,
+    "game": {
+      "away_team": "LA Clippers",
+      "game_id": "G-2026-004",
+      "home_team": "Denver Nuggets",
+      "sport": "basketball",
+      "start_time": "2026-08-16T21:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Denver Nuggets"
+    },
+    "scenario_id": "S004"
+  },
+  {
+    "category": [
+      "negative_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.65,
+    "game": {
+      "away_team": "Houston Rockets",
+      "game_id": "G-2026-005",
+      "home_team": "Dallas Mavericks",
+      "sport": "basketball",
+      "start_time": "2026-08-17T19:30:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Dallas Mavericks"
+    },
+    "scenario_id": "S005"
+  },
+  {
+    "category": [
+      "break_even",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.4,
+    "game": {
+      "away_team": "Brooklyn Nets",
+      "game_id": "G-2026-006",
+      "home_team": "New York Knicks",
+      "sport": "basketball",
+      "start_time": "2026-08-17T20:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "New York Knicks"
+    },
+    "scenario_id": "S006"
+  },
+  {
+    "category": [
+      "tie",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.47,
+    "game": {
+      "away_team": "Toronto Raptors",
+      "game_id": "G-2026-007",
+      "home_team": "Philadelphia 76ers",
+      "sport": "basketball",
+      "start_time": "2026-08-18T19:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Philadelphia 76ers"
+    },
+    "scenario_id": "S007"
+  },
+  {
+    "category": [
+      "missing_data",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.5,
+    "game": {
+      "away_team": "New Orleans Pelicans",
+      "game_id": "G-2026-008",
+      "home_team": "Memphis Grizzlies",
+      "sport": "basketball",
+      "start_time": "2026-08-18T20:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Memphis Grizzlies"
+    },
+    "scenario_id": "S008"
+  },
+  {
+    "category": [
+      "freshness",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.45,
+    "game": {
+      "away_team": "Oklahoma City Thunder",
+      "game_id": "G-2026-009",
+      "home_team": "Minnesota Timberwolves",
+      "sport": "basketball",
+      "start_time": "2026-08-19T19:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Minnesota Timberwolves"
+    },
+    "scenario_id": "S009"
+  },
+  {
+    "category": [
+      "freshness",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.42,
+    "game": {
+      "away_team": "Utah Jazz",
+      "game_id": "G-2026-010",
+      "home_team": "Sacramento Kings",
+      "sport": "basketball",
+      "start_time": "2026-08-19T21:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Sacramento Kings"
+    },
+    "scenario_id": "S010"
+  },
+  {
+    "category": [
+      "freshness",
+      "negative_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.5,
+    "game": {
+      "away_team": "Orlando Magic",
+      "game_id": "G-2026-011",
+      "home_team": "Atlanta Hawks",
+      "sport": "basketball",
+      "start_time": "2026-08-20T19:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Atlanta Hawks"
+    },
+    "scenario_id": "S011"
+  },
+  {
+    "category": [
+      "spread",
+      "schema_validation_only"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.5238,
+    "game": {
+      "away_team": "Indiana Pacers",
+      "game_id": "G-2026-012",
+      "home_team": "Chicago Bulls",
+      "sport": "basketball",
+      "start_time": "2026-08-20T20:00:00"
+    },
+    "market": {
+      "line": -4.5,
+      "market_type": "spread",
+      "selected_outcome": "Chicago Bulls"
+    },
+    "scenario_id": "S012"
+  },
+  {
+    "category": [
+      "total",
+      "schema_validation_only"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.5,
+    "game": {
+      "away_team": "Detroit Pistons",
+      "game_id": "G-2026-013",
+      "home_team": "San Antonio Spurs",
+      "sport": "basketball",
+      "start_time": "2026-08-21T19:00:00"
+    },
+    "market": {
+      "line": 220.5,
+      "market_type": "total",
+      "selected_outcome": "Over"
+    },
+    "scenario_id": "S013"
+  },
+  {
+    "category": [
+      "hand_verified_positive",
+      "positive_ev",
+      "moneyline"
+    ],
+    "current_odds_version": "v1",
+    "estimated_true_probability": 0.45,
+    "game": {
+      "away_team": "Charlotte Hornets",
+      "game_id": "G-2026-014",
+      "home_team": "Portland Trail Blazers",
+      "sport": "basketball",
+      "start_time": "2026-08-21T21:00:00"
+    },
+    "market": {
+      "line": null,
+      "market_type": "moneyline",
+      "selected_outcome": "Portland Trail Blazers"
+    },
+    "scenario_id": "S014"
+  }
+]

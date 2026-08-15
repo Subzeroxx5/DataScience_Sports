@@ -1,0 +1,38 @@
+[
+  {
+    "american_odds": 120,
+    "game_id": "G-2026-009",
+    "is_current": false,
+    "line": null,
+    "market_type": "moneyline",
+    "record_id": "REC-S009-DRAFTKINGS-stale",
+    "selected_outcome": "Minnesota Timberwolves",
+    "sportsbook": "DraftKings",
+    "timestamp": "2026-08-01T09:00:00",
+    "version": "v0"
+  },
+  {
+    "american_odds": 130,
+    "game_id": "G-2026-010",
+    "is_current": false,
+    "line": null,
+    "market_type": "moneyline",
+    "record_id": "REC-S010-FANDUEL-stale",
+    "selected_outcome": "Sacramento Kings",
+    "sportsbook": "FanDuel",
+    "timestamp": "2026-08-01T09:00:00",
+    "version": "v0"
+  },
+  {
+    "american_odds": -130,
+    "game_id": "G-2026-011",
+    "is_current": false,
+    "line": null,
+    "market_type": "moneyline",
+    "record_id": "REC-S011-BETMGM-stale",
+    "selected_outcome": "Atlanta Hawks",
+    "sportsbook": "BetMGM",
+    "timestamp": "2026-08-01T09:00:00",
+    "version": "v0"
+  }
+]

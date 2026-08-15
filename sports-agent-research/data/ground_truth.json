@@ -1,0 +1,254 @@
+[
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 125,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.23750000000000004,
+    "expected_implied_probability": 0.4444444444444444,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S001"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": -110,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": -0.23636363636363633,
+    "expected_implied_probability": 0.5238095238095238,
+    "expected_positive_ev": false,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S002"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 105,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.025000000000000022,
+    "expected_implied_probability": 0.4878048780487805,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S003"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 210,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.395,
+    "expected_implied_probability": 0.3225806451612903,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S004"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": -280,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": -0.11785714285714283,
+    "expected_implied_probability": 0.7368421052631579,
+    "expected_positive_ev": false,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S005"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 150,
+    "expected_best_sportsbook": "DraftKings",
+    "expected_best_sportsbooks": [
+      "DraftKings"
+    ],
+    "expected_ev": 1.1102230246251565e-16,
+    "expected_implied_probability": 0.4,
+    "expected_positive_ev": false,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S006"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 125,
+    "expected_best_sportsbook": "DraftKings",
+    "expected_best_sportsbooks": [
+      "DraftKings",
+      "FanDuel"
+    ],
+    "expected_ev": 0.057499999999999885,
+    "expected_implied_probability": 0.4444444444444444,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S007"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 115,
+    "expected_best_sportsbook": "BetMGM",
+    "expected_best_sportsbooks": [
+      "BetMGM"
+    ],
+    "expected_ev": 0.07499999999999996,
+    "expected_implied_probability": 0.46511627906976744,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings"
+    ],
+    "scenario_id": "S008"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 140,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.07999999999999996,
+    "expected_implied_probability": 0.4166666666666667,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S009"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 150,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.04999999999999993,
+    "expected_implied_probability": 0.4,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S010"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": -110,
+    "expected_best_sportsbook": "BetMGM",
+    "expected_best_sportsbooks": [
+      "BetMGM"
+    ],
+    "expected_ev": -0.04545454545454547,
+    "expected_implied_probability": 0.5238095238095238,
+    "expected_positive_ev": false,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S011"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": -105,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.02265714285714293,
+    "expected_implied_probability": 0.5121951219512195,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S012"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": -105,
+    "expected_best_sportsbook": "BetMGM",
+    "expected_best_sportsbooks": [
+      "BetMGM"
+    ],
+    "expected_ev": -0.023809523809523836,
+    "expected_implied_probability": 0.5121951219512195,
+    "expected_positive_ev": false,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S013"
+  },
+  {
+    "current_odds_version": "v1",
+    "expected_best_odds": 150,
+    "expected_best_sportsbook": "FanDuel",
+    "expected_best_sportsbooks": [
+      "FanDuel"
+    ],
+    "expected_ev": 0.125,
+    "expected_implied_probability": 0.4,
+    "expected_positive_ev": true,
+    "expected_sportsbooks": [
+      "BetMGM",
+      "Caesars",
+      "DraftKings",
+      "FanDuel"
+    ],
+    "scenario_id": "S014"
+  }
+]
