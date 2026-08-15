@@ -34,10 +34,14 @@ docstring notes on SportsbookToolError below) — translating would require
 this module to know the concrete exception types of whichever provider is
 injected, which would defeat provider swappability.
 
-find_best_line() remains intentionally unimplemented in this milestone
-(still raises NotImplementedError) — best-line selection is business
-logic that reuses src/calculations/odds_math.compare_american_odds, and
-is deferred to Milestone 5E.
+find_best_line() (Milestone 5E) determines the best currently available
+price by calling get_odds() (i.e. going through the same provider path as
+every other method here) and comparing the results with
+src/calculations/odds_math.best_odds / compare_american_odds — the
+calculation layer remains the sole source of odds-favorability math; this
+module never reimplements it. find_best_line() contains no EV, implied
+probability, or true-probability logic: only "which current price is
+best, and who offers it."
 
 Freshness rule (binding on every method below):
 
@@ -68,6 +72,7 @@ exists.
 
 from __future__ import annotations
 
+from src.calculations.odds_math import best_odds, compare_american_odds
 from src.models import BestLineResult, Game, MarketType, SportsbookOdds
 from src.providers.base import OddsProvider
 
@@ -270,23 +275,42 @@ class SportsbookTools:
             Caesars +118 must yield best_odds=125,
             sportsbooks=["DraftKings", "FanDuel"].
 
+            Tied sportsbook names are returned in alphabetical order —
+            the deterministic tie-break policy for this project (no
+            other ordering policy existed prior to this method).
+
         Freshness:
-            Computed only over current records — never considers stale
-            odds as candidates for best line (see module docstring).
+            Computed only over current records — relies entirely on
+            get_odds()'s (i.e. the provider's) current-only filtering.
+            This method performs no independent freshness filtering of
+            its own, so stale odds never reach the comparison.
 
         Raises:
-            GameNotFoundError: game_id does not correspond to a known game.
-            MarketNotFoundError: no odds exist for market_type on this game.
-            OutcomeNotFoundError: selected_outcome is not valid for this
-                game/market.
-            NoOddsAvailableError: the game/market/outcome is valid but no
-                sportsbook currently offers a line for it, so no best
-                line can be determined.
+            Whatever exception the injected provider raises via
+            get_odds() for an unknown game, market, or outcome, or for a
+            valid game/market/outcome with no current lines at all (see
+            get_odds() above). Not translated or caught here — never
+            fabricates a result when no current odds exist.
 
-        Not implemented in this milestone (Milestone 5D). The comparison
-        and tie-detection logic will reuse
-        src/calculations/odds_math.compare_american_odds rather than
-        reimplementing odds-favorability math here — deferred to
-        Milestone 5E.
+        Contains no betting-value logic: only odds-favorability
+        comparison (src/calculations/odds_math.best_odds and
+        compare_american_odds), never implied probability, expected
+        value, or positive-EV classification.
         """
+        current_odds = self.get_odds(game_id, market_type, selected_outcome)
+
+        best = best_odds([odds.american_odds for odds in current_odds])
+        tied_sportsbooks = sorted(
+            odds.sportsbook
+            for odds in current_odds
+            if compare_american_odds(odds.american_odds, best) == 0
+        )
+
+        return BestLineResult(
+            game_id=game_id,
+            market_type=market_type,
+            selected_outcome=selected_outcome,
+            best_odds=best,
+            sportsbooks=tied_sportsbooks,
+        )
         raise NotImplementedError

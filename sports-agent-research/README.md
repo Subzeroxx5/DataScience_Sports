@@ -18,25 +18,11 @@ See [docs/research_design.md](docs/research_design.md) for the full experimental
 
 ## Current Project Status
 
-**Design / foundation stage.** The repository structure and experimental design have been established. No calculations, tools, RAG, agents, or LLM integrations have been implemented yet.
-
-## Milestone Roadmap
-
-| Milestone | Description | Status |
-|---|---|---|
-| 1 | Project initialization and experimental design | In progress |
-| 2 | Core Pydantic data models | Not started |
-| 3 | Deterministic odds and EV calculations | Not started |
-| 4 | Controlled sportsbook dataset and ground truth | Not started |
-| 5 | Sportsbook lookup tools | Not started |
-| 6 | RAG ingestion and retrieval | Not started |
-| 7 | RAG-only agent | Not started |
-| 8 | Tool-calling-only agent | Not started |
-| 9 | Hybrid agent | Not started |
-| 10 | Evaluation metrics | Not started |
-| 11 | Experiment runner | Not started |
-| 12 | Full experiment | Not started |
-| 13 | Statistical analysis and visualizations | Not started |
+See [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md) for the authoritative,
+up-to-date project state (completed milestones, current test baseline,
+what exists vs. what doesn't yet) and [docs/ROADMAP.md](docs/ROADMAP.md)
+for the full milestone list. This README is not kept in sync milestone by
+milestone — those two files are the source of truth.
 
 ## Python Version
 
@@ -49,11 +35,12 @@ sports-agent-research/
 ├── docs/               research design and documentation
 ├── data/               controlled datasets and RAG source documents
 ├── src/
-│   ├── calculations/   deterministic odds/EV math (future)
-│   ├── tools/          sportsbook lookup tools (future)
-│   ├── rag/            RAG ingestion and retrieval (future)
+│   ├── calculations/   deterministic odds/EV math
+│   ├── providers/      OddsProvider abstraction + controlled JSON provider
+│   ├── tools/          sportsbook lookup tools
+│   ├── rag/            RAG document schema + controlled corpus (retrieval: future)
 │   ├── agents/         RAG-only, tool-only, and hybrid agents (future)
-│   └── evaluation/     evaluation metrics (future)
+│   └── evaluation/     dataset loaders + deterministic ground truth
 ├── experiments/        experiment runners (future)
 ├── results/            experiment output (gitignored)
 └── tests/              test suite

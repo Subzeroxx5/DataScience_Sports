@@ -1,0 +1,107 @@
+[
+  {
+    "query_id": "q001",
+    "query_text": "What price did DraftKings have on the Lakers moneyline?",
+    "query_type": "specific_game_sportsbook_outcome",
+    "relevant_document_ids": [
+      "g-2026-001-moneyline-los-angeles-lakers-draftkings-v1"
+    ]
+  },
+  {
+    "query_id": "q002",
+    "query_text": "What are the moneyline odds for the Philadelphia 76ers from every sportsbook?",
+    "query_type": "specific_game_market",
+    "relevant_document_ids": [
+      "g-2026-007-moneyline-philadelphia-76ers-betmgm-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-caesars-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-draftkings-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-fanduel-v1"
+    ]
+  },
+  {
+    "query_id": "q003",
+    "query_text": "Retrieve the DraftKings moneyline prices for both teams in the Lakers versus Celtics game.",
+    "query_type": "two_sided_market",
+    "relevant_document_ids": [
+      "g-2026-001-moneyline-los-angeles-lakers-draftkings-v1",
+      "g-2026-001-moneyline-boston-celtics-draftkings-v1"
+    ]
+  },
+  {
+    "query_id": "q004",
+    "query_text": "What moneyline price does FanDuel offer for the Timberwolves?",
+    "query_type": "natural_language_sportsbook_odds",
+    "relevant_document_ids": [
+      "g-2026-009-moneyline-minnesota-timberwolves-fanduel-v1"
+    ]
+  },
+  {
+    "query_id": "q005",
+    "query_text": "Tell me about the matchup between the Lakers and the Celtics.",
+    "query_type": "context_competition",
+    "relevant_document_ids": [
+      "g-2026-001-game-context"
+    ]
+  },
+  {
+    "query_id": "q006",
+    "query_text": "What was the earlier DraftKings price for the Timberwolves before it changed?",
+    "query_type": "stale_snapshot_target",
+    "relevant_document_ids": [
+      "g-2026-009-moneyline-minnesota-timberwolves-draftkings-v0"
+    ]
+  },
+  {
+    "query_id": "q007",
+    "query_text": "What is DraftKings' current moneyline price for the Thunder?",
+    "query_type": "current_snapshot_target",
+    "relevant_document_ids": [
+      "g-2026-009-moneyline-oklahoma-city-thunder-draftkings-v1"
+    ]
+  },
+  {
+    "query_id": "q008",
+    "query_text": "What price did DraftKings list for the Minnesota Timberwolves moneyline?",
+    "query_type": "freshness_stale_vs_current",
+    "relevant_document_ids": [
+      "g-2026-009-moneyline-minnesota-timberwolves-draftkings-v0",
+      "g-2026-009-moneyline-minnesota-timberwolves-draftkings-v1"
+    ]
+  },
+  {
+    "query_id": "q009",
+    "query_text": "Which sportsbooks have posted odds for the Philadelphia 76ers moneyline?",
+    "query_type": "specific_game_market",
+    "relevant_document_ids": [
+      "g-2026-007-moneyline-philadelphia-76ers-betmgm-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-caesars-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-draftkings-v1",
+      "g-2026-007-moneyline-philadelphia-76ers-fanduel-v1"
+    ]
+  },
+  {
+    "query_id": "q010",
+    "query_text": "What price does BetMGM have for the Pelicans?",
+    "query_type": "specific_game_sportsbook_outcome",
+    "relevant_document_ids": [
+      "g-2026-008-moneyline-new-orleans-pelicans-betmgm-v1"
+    ]
+  },
+  {
+    "query_id": "q011",
+    "query_text": "Describe the moneyline market for the Grizzlies versus Pelicans game.",
+    "query_type": "context_competition",
+    "relevant_document_ids": [
+      "g-2026-008-moneyline-market-context"
+    ]
+  },
+  {
+    "query_id": "q012",
+    "query_text": "What has BetMGM listed for the Atlanta Hawks moneyline over time?",
+    "query_type": "freshness_stale_vs_current",
+    "relevant_document_ids": [
+      "g-2026-011-moneyline-atlanta-hawks-betmgm-v0",
+      "g-2026-011-moneyline-atlanta-hawks-betmgm-v1"
+    ]
+  }
+]

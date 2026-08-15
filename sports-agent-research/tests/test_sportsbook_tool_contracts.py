@@ -3,12 +3,11 @@
 These tests validate the public interface: signatures, type hints,
 docstrings, and structured response/error models — the parts of the
 Milestone 5A contract that remain stable across Milestone 5D's provider
-wiring. find_best_line() is still unimplemented (deferred to Milestone
-5E) and is tested accordingly. get_games/get_game/get_odds/
-get_sportsbook_odds are now wired to an injected provider; their
-delegation behavior (argument forwarding, return values, error
-propagation, freshness) is covered by tests/test_sportsbook_tools.py using
-a fake provider, not here.
+wiring and Milestone 5E's find_best_line() implementation. Delegation
+behavior for all five methods (argument forwarding, return values, error
+propagation, freshness, and find_best_line's odds-comparison/tie/ground-
+truth behavior) is covered by tests/test_sportsbook_tools.py and
+tests/test_sportsbook_tool_integration.py, not here.
 
 Milestone 5A originally exposed get_games/get_game/get_odds/
 get_sportsbook_odds/find_best_line as free module-level functions, each
@@ -33,7 +32,6 @@ import pytest
 from pydantic import ValidationError
 
 from src.models import BestLineResult, Game, MarketType, SportsbookOdds
-from src.providers.base import OddsProvider
 from src.tools.sportsbook_tools import (
     GameNotFoundError,
     MarketNotFoundError,
@@ -51,33 +49,6 @@ PUBLIC_METHODS = {
     "get_sportsbook_odds": SportsbookTools.get_sportsbook_odds,
     "find_best_line": SportsbookTools.find_best_line,
 }
-
-
-class _StubProvider(OddsProvider):
-    """Minimal OddsProvider stub, used only to instantiate SportsbookTools
-    for contract-level checks (e.g. find_best_line's NotImplementedError).
-    Delegation behavior is tested separately in test_sportsbook_tools.py.
-    """
-
-    def get_games(self) -> list[Game]:
-        return []
-
-    def get_game(self, game_id: str) -> Game:
-        raise NotImplementedError
-
-    def get_odds(
-        self, game_id: str, market_type: MarketType, selected_outcome: str
-    ) -> list[SportsbookOdds]:
-        raise NotImplementedError
-
-    def get_sportsbook_odds(
-        self,
-        game_id: str,
-        sportsbook: str,
-        market_type: MarketType,
-        selected_outcome: str,
-    ) -> SportsbookOdds:
-        raise NotImplementedError
 
 
 # ---------------------------------------------------------------------------
@@ -197,17 +168,6 @@ def test_get_sportsbook_odds_returns_sportsbook_odds():
 
 def test_find_best_line_returns_best_line_result():
     assert typing.get_type_hints(SportsbookTools.find_best_line)["return"] is BestLineResult
-
-
-# ---------------------------------------------------------------------------
-# find_best_line remains unimplemented (deferred to Milestone 5E)
-# ---------------------------------------------------------------------------
-
-
-def test_find_best_line_not_implemented():
-    tools = SportsbookTools(_StubProvider())
-    with pytest.raises(NotImplementedError):
-        tools.find_best_line("G-2026-001", MarketType.MONEYLINE, "Los Angeles Lakers")
 
 
 # ---------------------------------------------------------------------------

@@ -1,0 +1,400 @@
+[
+  {
+    "ineligibility_reason": null,
+    "market_dispersion": {
+      "book_count": 4,
+      "maximum_probability": 0.447405997144217,
+      "mean_probability": 0.4371323702395885,
+      "median_probability": 0.4361197287779657,
+      "minimum_probability": 0.42888402625820565,
+      "population_std_dev": 0.006752384003832182,
+      "probability_range": 0.018521970886011374
+    },
+    "market_id": "G-2026-001-moneyline",
+    "quant_evaluable": true,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S001",
+    "selected_outcome": "Los Angeles Lakers",
+    "sportsbook_analyses": [
+      {
+        "american_odds": 115,
+        "book_implied_probability": 0.46511627906976744,
+        "comparison_sportsbooks": [
+          "Caesars",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.06752816993320193,
+        "market_reference_probability": 0.43370782793804563,
+        "no_vig_probability": 0.447405997144217,
+        "positive_ev": false,
+        "probability_edge": -0.031408451131721804,
+        "sportsbook": "BetMGM"
+      },
+      {
+        "american_odds": 122,
+        "book_implied_probability": 0.45045045045045046,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.027457791441331314,
+        "market_reference_probability": 0.43808207592732823,
+        "no_vig_probability": 0.43428325317636923,
+        "positive_ev": false,
+        "probability_edge": -0.012368374523122228,
+        "sportsbook": "Caesars"
+      },
+      {
+        "american_odds": 120,
+        "book_implied_probability": 0.45454545454545453,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "FanDuel"
+        ],
+        "expected_value": -0.03891293050888589,
+        "market_reference_probability": 0.4368577588595973,
+        "no_vig_probability": 0.43795620437956206,
+        "positive_ev": false,
+        "probability_edge": -0.017687695685857208,
+        "sportsbook": "DraftKings"
+      },
+      {
+        "american_odds": 125,
+        "book_implied_probability": 0.4444444444444444,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "DraftKings"
+        ],
+        "expected_value": -0.01026590897488866,
+        "market_reference_probability": 0.4398818182333828,
+        "no_vig_probability": 0.42888402625820565,
+        "positive_ev": false,
+        "probability_edge": -0.004562626211061627,
+        "sportsbook": "FanDuel"
+      }
+    ]
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-002-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S002",
+    "selected_outcome": "Golden State Warriors",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-003-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S003",
+    "selected_outcome": "Milwaukee Bucks",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-004-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S004",
+    "selected_outcome": "Denver Nuggets",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-005-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S005",
+    "selected_outcome": "Dallas Mavericks",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-006-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S006",
+    "selected_outcome": "New York Knicks",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": null,
+    "market_dispersion": {
+      "book_count": 4,
+      "maximum_probability": 0.4439826185528055,
+      "mean_probability": 0.4352973428042318,
+      "median_probability": 0.43416136320295806,
+      "minimum_probability": 0.42888402625820565,
+      "population_std_dev": 0.006611469460608076,
+      "probability_range": 0.015098592294599866
+    },
+    "market_id": "G-2026-007-moneyline",
+    "quant_evaluable": true,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S007",
+    "selected_outcome": "Philadelphia 76ers",
+    "sportsbook_analyses": [
+      {
+        "american_odds": 120,
+        "book_implied_probability": 0.45454545454545453,
+        "comparison_sportsbooks": [
+          "Caesars",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.04538284121590763,
+        "market_reference_probability": 0.4339168903564056,
+        "no_vig_probability": 0.43943870014771047,
+        "positive_ev": false,
+        "probability_edge": -0.020628564189048904,
+        "sportsbook": "BetMGM"
+      },
+      {
+        "american_odds": 118,
+        "book_implied_probability": 0.45871559633027525,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.05736309306407161,
+        "market_reference_probability": 0.4324022508880406,
+        "no_vig_probability": 0.4439826185528055,
+        "positive_ev": false,
+        "probability_edge": -0.02631334544223468,
+        "sportsbook": "Caesars"
+      },
+      {
+        "american_odds": 125,
+        "book_implied_probability": 0.4444444444444444,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "FanDuel"
+        ],
+        "expected_value": -0.015770991280958713,
+        "market_reference_probability": 0.43743511498624055,
+        "no_vig_probability": 0.42888402625820565,
+        "positive_ev": false,
+        "probability_edge": -0.007009329458203872,
+        "sportsbook": "DraftKings"
+      },
+      {
+        "american_odds": 125,
+        "book_implied_probability": 0.4444444444444444,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "DraftKings"
+        ],
+        "expected_value": -0.015770991280958713,
+        "market_reference_probability": 0.43743511498624055,
+        "no_vig_probability": 0.42888402625820565,
+        "positive_ev": false,
+        "probability_edge": -0.007009329458203872,
+        "sportsbook": "FanDuel"
+      }
+    ]
+  },
+  {
+    "ineligibility_reason": null,
+    "market_dispersion": {
+      "book_count": 3,
+      "maximum_probability": 0.4721030042918455,
+      "mean_probability": 0.4616881431733997,
+      "median_probability": 0.46153846153846156,
+      "minimum_probability": 0.45142296368989204,
+      "population_std_dev": 0.008443254635841523,
+      "probability_range": 0.020680040601953442
+    },
+    "market_id": "G-2026-008-moneyline",
+    "quant_evaluable": true,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S008",
+    "selected_outcome": "Memphis Grizzlies",
+    "sportsbook_analyses": [
+      {
+        "american_odds": 115,
+        "book_implied_probability": 0.46511627906976744,
+        "comparison_sportsbooks": [
+          "Caesars",
+          "DraftKings"
+        ],
+        "expected_value": 0.0036645757675799473,
+        "market_reference_probability": 0.4668207329151535,
+        "no_vig_probability": 0.45142296368989204,
+        "positive_ev": true,
+        "probability_edge": 0.0017044538453860891,
+        "sportsbook": "BetMGM"
+      },
+      {
+        "american_odds": 105,
+        "book_implied_probability": 0.4878048780487805,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "DraftKings"
+        ],
+        "expected_value": -0.06421453914093761,
+        "market_reference_probability": 0.4564807126141768,
+        "no_vig_probability": 0.4721030042918455,
+        "positive_ev": false,
+        "probability_edge": -0.0313241654346037,
+        "sportsbook": "Caesars"
+      },
+      {
+        "american_odds": 110,
+        "book_implied_probability": 0.47619047619047616,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars"
+        ],
+        "expected_value": -0.030297733619175538,
+        "market_reference_probability": 0.4617629839908688,
+        "no_vig_probability": 0.46153846153846156,
+        "positive_ev": false,
+        "probability_edge": -0.014427492199607372,
+        "sportsbook": "DraftKings"
+      }
+    ]
+  },
+  {
+    "ineligibility_reason": null,
+    "market_dispersion": {
+      "book_count": 4,
+      "maximum_probability": 0.4236130090188576,
+      "mean_probability": 0.4148240595237525,
+      "median_probability": 0.4159782605008091,
+      "minimum_probability": 0.40372670807453415,
+      "population_std_dev": 0.007716381324975004,
+      "probability_range": 0.019886300944323476
+    },
+    "market_id": "G-2026-009-moneyline",
+    "quant_evaluable": true,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S009",
+    "selected_outcome": "Minnesota Timberwolves",
+    "sportsbook_analyses": [
+      {
+        "american_odds": 130,
+        "book_implied_probability": 0.43478260869565216,
+        "comparison_sportsbooks": [
+          "Caesars",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.050001735667775216,
+        "market_reference_probability": 0.41304272362270644,
+        "no_vig_probability": 0.42016806722689076,
+        "positive_ev": false,
+        "probability_edge": -0.02173988507294572,
+        "sportsbook": "BetMGM"
+      },
+      {
+        "american_odds": 128,
+        "book_implied_probability": 0.43859649122807015,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "DraftKings",
+          "FanDuel"
+        ],
+        "expected_value": -0.06088074590212411,
+        "market_reference_probability": 0.4118944096920508,
+        "no_vig_probability": 0.4236130090188576,
+        "positive_ev": false,
+        "probability_edge": -0.02670208153601933,
+        "sportsbook": "Caesars"
+      },
+      {
+        "american_odds": 135,
+        "book_implied_probability": 0.425531914893617,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "FanDuel"
+        ],
+        "expected_value": -0.02278556894911199,
+        "market_reference_probability": 0.41583592810676084,
+        "no_vig_probability": 0.4117884537747275,
+        "positive_ev": false,
+        "probability_edge": -0.009695986786856181,
+        "sportsbook": "DraftKings"
+      },
+      {
+        "american_odds": 140,
+        "book_implied_probability": 0.4166666666666667,
+        "comparison_sportsbooks": [
+          "BetMGM",
+          "Caesars",
+          "DraftKings"
+        ],
+        "expected_value": 0.004455624016380777,
+        "market_reference_probability": 0.418523176673492,
+        "no_vig_probability": 0.40372670807453415,
+        "positive_ev": true,
+        "probability_edge": 0.001856510006825296,
+        "sportsbook": "FanDuel"
+      }
+    ]
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-010-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S010",
+    "selected_outcome": "Sacramento Kings",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-011-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S011",
+    "selected_outcome": "Atlanta Hawks",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "market_type='spread' is not a two-outcome moneyline market; no opposing-side data exists to derive a no-vig probability",
+    "market_dispersion": null,
+    "market_id": "G-2026-012-spread",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S012",
+    "selected_outcome": "Chicago Bulls",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "market_type='total' is not a two-outcome moneyline market; no opposing-side data exists to derive a no-vig probability",
+    "market_dispersion": null,
+    "market_id": "G-2026-013-total",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S013",
+    "selected_outcome": "Over",
+    "sportsbook_analyses": []
+  },
+  {
+    "ineligibility_reason": "only 0 sportsbook(s) quote current prices on both sides of this market ([]); at least 3 required (1 target + 2 comparison books)",
+    "market_dispersion": null,
+    "market_id": "G-2026-014-moneyline",
+    "quant_evaluable": false,
+    "reference_probability_mode": "market_consensus",
+    "scenario_id": "S014",
+    "selected_outcome": "Portland Trail Blazers",
+    "sportsbook_analyses": []
+  }
+]

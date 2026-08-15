@@ -43,17 +43,44 @@ def load_scenario_definitions() -> list[dict]:
     return _load_json("test_scenarios.json")
 
 
-def _odds_records_for_game(game_id: str, records: list[dict]) -> list[dict]:
-    return [r for r in records if r["game_id"] == game_id]
+def _odds_records_for_market(
+    game_id: str, market_type: str, selected_outcome: str, records: list[dict]
+) -> list[dict]:
+    """Filter odds records to one exact (game, market, outcome) combination.
+
+    Filtering by game_id alone is insufficient once a game's current_odds
+    ledger can hold both sides of a two-sided market (e.g. moneyline odds
+    for both the home and away team) — a game_id-only filter would pull in
+    the opposing outcome's odds too, and TestScenario's no-duplicate-
+    sportsbook validator would then reject the mix (a sportsbook offering
+    both sides looks like the same sportsbook appearing twice). Matching
+    ControlledOddsProvider's indexing (src/providers/controlled.py), which
+    already keys by the full (game_id, market_type, selected_outcome)
+    tuple, keeps this loader's behavior consistent with the provider layer.
+    """
+    return [
+        r
+        for r in records
+        if r["game_id"] == game_id
+        and r["market_type"] == market_type
+        and r["selected_outcome"] == selected_outcome
+    ]
 
 
 def build_test_scenario(definition: dict, current_odds_records: list[dict]) -> TestScenario:
-    """Join a scenario definition with its current odds records by game_id."""
+    """Join a scenario definition with its current odds records by
+    (game_id, market_type, selected_outcome)."""
     game = Game(**definition["game"])
     market = Market(**definition["market"])
-    game_records = _odds_records_for_game(game.game_id, current_odds_records)
+    game_records = _odds_records_for_market(
+        game.game_id, market.market_type.value, market.selected_outcome, current_odds_records
+    )
     if not game_records:
-        raise ValueError(f"no current odds records found for game_id={game.game_id!r}")
+        raise ValueError(
+            f"no current odds records found for game_id={game.game_id!r}, "
+            f"market_type={market.market_type.value!r}, "
+            f"selected_outcome={market.selected_outcome!r}"
+        )
     sportsbook_odds = [
         SportsbookOdds(
             sportsbook=record["sportsbook"],

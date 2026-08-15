@@ -1,0 +1,8 @@
+{
+  "corpus_path": "data/rag_documents/corpus.jsonl",
+  "document_count": 91,
+  "embedding_dimension": 384,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "embeddings_normalized": true,
+  "similarity_metric": "inner_product_normalized (cosine equivalent)"
+}

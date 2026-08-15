@@ -98,6 +98,136 @@ def tools(fake_provider):
     return SportsbookTools(fake_provider)
 
 
+class ConfigurableOddsProvider(OddsProvider):
+    """Fake provider whose get_odds() result is set directly per test, for
+    exercising find_best_line()'s odds-comparison logic against exact,
+    hand-picked inputs without going through the real JSON dataset."""
+
+    def __init__(self, odds: list[SportsbookOdds]):
+        self._odds = odds
+
+    def get_games(self) -> list[Game]:
+        return [_GAME]
+
+    def get_game(self, game_id: str) -> Game:
+        return _GAME
+
+    def get_odds(
+        self, game_id: str, market_type: MarketType, selected_outcome: str
+    ) -> list[SportsbookOdds]:
+        if not self._odds:
+            raise OddsNotFound("no current odds available")
+        return list(self._odds)
+
+    def get_sportsbook_odds(
+        self,
+        game_id: str,
+        sportsbook: str,
+        market_type: MarketType,
+        selected_outcome: str,
+    ) -> SportsbookOdds:
+        for odds in self._odds:
+            if odds.sportsbook == sportsbook:
+                return odds
+        raise OddsNotFound(sportsbook)
+
+
+def _odds(**by_sportsbook: int) -> list[SportsbookOdds]:
+    return [
+        SportsbookOdds(sportsbook=name, american_odds=value, is_current=True)
+        for name, value in by_sportsbook.items()
+    ]
+
+
+def _find_best_line(odds: list[SportsbookOdds]):
+    tools = SportsbookTools(ConfigurableOddsProvider(odds))
+    return tools.find_best_line("G-FAKE-001", MarketType.MONEYLINE, "Fake Home")
+
+
+# ---------------------------------------------------------------------------
+# find_best_line — odds comparison and tie handling (Milestone 5E)
+# ---------------------------------------------------------------------------
+
+
+def test_find_best_line_positive_odds():
+    result = _find_best_line(_odds(DraftKings=120, FanDuel=125, BetMGM=115))
+    assert result.best_odds == 125
+    assert result.sportsbooks == ["FanDuel"]
+
+
+def test_find_best_line_negative_odds():
+    result = _find_best_line(_odds(DraftKings=-120, FanDuel=-110, BetMGM=-125))
+    assert result.best_odds == -110
+    assert result.sportsbooks == ["FanDuel"]
+
+
+def test_find_best_line_mixed_sign_odds():
+    result = _find_best_line(_odds(DraftKings=-105, FanDuel=105, BetMGM=-110, Caesars=100))
+    assert result.best_odds == 105
+    assert result.sportsbooks == ["FanDuel"]
+
+
+def test_find_best_line_tie():
+    result = _find_best_line(_odds(DraftKings=125, FanDuel=125, BetMGM=120))
+    assert result.best_odds == 125
+    assert result.sportsbooks == ["DraftKings", "FanDuel"]
+
+
+def test_find_best_line_tie_ordering_is_alphabetical():
+    # Insertion order is FanDuel, DraftKings — output must still be
+    # alphabetical (DraftKings, FanDuel), proving the tie-break policy is
+    # not "first in the input" but a fixed deterministic ordering.
+    result = _find_best_line(_odds(FanDuel=125, DraftKings=125, BetMGM=120))
+    assert result.sportsbooks == ["DraftKings", "FanDuel"]
+
+
+def test_find_best_line_single_sportsbook():
+    result = _find_best_line(_odds(DraftKings=-115))
+    assert result.best_odds == -115
+    assert result.sportsbooks == ["DraftKings"]
+
+
+def test_find_best_line_no_odds_raises_explicitly():
+    with pytest.raises(OddsNotFound):
+        _find_best_line([])
+
+
+def test_find_best_line_never_compares_by_absolute_value():
+    # If compared by abs(), -120 (abs 120) would appear to "tie" or beat
+    # +110 (abs 110) — the correct favorability winner is +110.
+    result = _find_best_line(_odds(DraftKings=-120, FanDuel=110))
+    assert result.best_odds == 110
+    assert result.sportsbooks == ["FanDuel"]
+
+
+@pytest.mark.parametrize(
+    "odds_a,odds_b,winner",
+    [
+        (120, 125, 125),
+        (-120, -110, -110),
+        (-105, 105, 105),
+        (100, -105, 100),
+        (-105, -110, -105),
+        (-110, -120, -110),
+        (-120, -150, -120),
+    ],
+)
+def test_find_best_line_required_pairwise_ordering(odds_a, odds_b, winner):
+    result = _find_best_line(_odds(BookA=odds_a, BookB=odds_b))
+    assert result.best_odds == winner
+
+
+def test_find_best_line_reuses_calculations_layer():
+    # find_best_line's result must agree with calling best_odds()/
+    # compare_american_odds() directly on the same inputs — i.e. it is
+    # not silently reimplementing its own ordering logic.
+    from src.calculations.odds_math import best_odds
+
+    values = [120, 125, 115, -300]
+    result = _find_best_line(_odds(DraftKings=120, FanDuel=125, BetMGM=115, Caesars=-300))
+    assert result.best_odds == best_odds(values)
+
+
 # ---------------------------------------------------------------------------
 # Provider delegation
 # ---------------------------------------------------------------------------
@@ -279,7 +409,7 @@ def test_tool_module_source_has_no_json_or_file_access():
             )
 
 
-def test_sportsbook_tools_only_imports_models_and_provider_abstraction():
+def test_sportsbook_tools_only_imports_models_provider_and_calculations():
     import ast
     from pathlib import Path
 
@@ -288,7 +418,7 @@ def test_sportsbook_tools_only_imports_models_and_provider_abstraction():
     )
     tree = ast.parse(source_path.read_text())
 
-    allowed = {"__future__", "src.models", "src.providers.base"}
+    allowed = {"__future__", "src.models", "src.providers.base", "src.calculations.odds_math"}
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
@@ -320,6 +450,10 @@ def test_end_to_end_with_real_controlled_provider():
     )
     assert fanduel_odds.american_odds == 125
 
+    best_line = tools.find_best_line("G-2026-001", MarketType.MONEYLINE, "Los Angeles Lakers")
+    assert best_line.best_odds == 125
+    assert best_line.sportsbooks == ["FanDuel"]
+
 
 def test_end_to_end_freshness_through_full_stack():
     # S009 / G-2026-009: DraftKings stale=120 (historical_odds.json),
@@ -331,3 +465,17 @@ def test_end_to_end_freshness_through_full_stack():
     )
     assert odds.american_odds == 135
     assert odds.american_odds != 120
+
+
+def test_end_to_end_find_best_line_excludes_stale_odds():
+    # DraftKings' stale +120 must never win best-line selection over its
+    # own current +135, or over another book's current price.
+    tools = SportsbookTools(ControlledOddsProvider())
+    result = tools.find_best_line(
+        "G-2026-009", MarketType.MONEYLINE, "Minnesota Timberwolves"
+    )
+    assert result.best_odds != 120
+    draftkings_current = tools.get_sportsbook_odds(
+        "G-2026-009", "DraftKings", MarketType.MONEYLINE, "Minnesota Timberwolves"
+    )
+    assert draftkings_current.american_odds == 135
