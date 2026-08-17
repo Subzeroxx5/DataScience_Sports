@@ -5,3 +5,8 @@ numpy
 sentence-transformers
 faiss-cpu
 anthropic
+httpx
+streamlit
+pandas
+scipy
+matplotlib

@@ -31,28 +31,40 @@ Milestone 9B  — Tool-calling agent end-to-end verification        — COMPLETE
 Milestone 10A — Hybrid RAG + tool-calling agent core               — COMPLETE
 Milestone 10B — Hybrid agent end-to-end verification                — COMPLETE
 Milestone 11   — Unified evaluation framework                       — COMPLETE
+Milestone 12   — Controlled experiment runner                        — COMPLETE
+Milestone 13   — Dashboard and research visualization                — COMPLETE
+Milestone 14A  — Freeze and run the final controlled experiment       — COMPLETE
+Milestone 14B  — Statistical analysis and research findings           — COMPLETE
+Milestone 15   — Research conclusions, manuscript, and presentation support — COMPLETE
 ```
 
 ## Current Documentation Checkpoint
 
 ```text
 6B.5 — Project Documentation and Agent Instructions (COMPLETE)
+Pre-14A — Local Real-LLM Backend (COMPLETE)
 ```
 
 ## Next Functional Milestone
 
 ```text
-Milestone 12 — Controlled Experiment Runner
+None — project roadmap complete (see docs/ROADMAP.md).
 ```
+
+All 15 planned milestones are COMPLETE. Remaining items (live sportsbook
+providers, broader scenario coverage, alternative LLMs, an independently
+trained predictive ML model) are documented future work in
+`docs/FINAL_RESEARCH_SUMMARY.md` and `docs/MANUSCRIPT_DRAFT.md`, not an
+active or implied next milestone — see `milestones/current.md`.
 
 ## Current Test Baseline
 
 ```text
 Current full test suite:
-849 passed / 0 failed
+1097 passed / 0 failed
 ```
 
-(Recorded from `pytest -q` at the end of Milestone 11.)
+(Recorded from `pytest -q` at the end of Milestone 14B.)
 
 ## Current System State
 
@@ -346,10 +358,334 @@ The project currently has:
   reproducibility; a full RAG/TOOL/HYBRID `ArchitectureComparison` round
   trips through JSON with per-run results preserved.
 
+- a controlled experiment runner (`src/experiments/`, Milestone 12):
+  `config.py` (`ExperimentConfig` — one frozen set of controls: model,
+  effort, temperature [`None`, this model family rejects it], RAG top_k,
+  max tool iterations, repetitions, execution mode, applied identically
+  to all three architectures; `ExperimentScenario`/
+  `build_scenario_manifest()` — one plain, architecture-neutral
+  canonical query per scenario derived only from market type and
+  selected outcome, e.g. "Compare the available moneyline prices for Los
+  Angeles Lakers and identify the best current value.", `_canonical_
+  query()` structurally takes no architecture parameter; deterministic
+  left-rotation execution-order policy across repetitions [Rep1
+  RAG→TOOL→HYBRID, Rep2 TOOL→HYBRID→RAG, Rep3 HYBRID→RAG→TOOL]; SHA-256
+  checksums of every controlled artifact for reproducibility metadata,
+  never an API key); `agent_factory.py` (`create_agent(architecture,
+  config)` — one centralized factory for all three architectures; MOCK
+  mode reuses the exact Milestone 9B/10B/11 deterministic fake-LLM
+  policies verbatim, still driving the real retrieval/tool pipelines;
+  REAL mode uses one `AnthropicLLMClient` configuration shared across
+  architectures); `runner.py` (`run_experiment()` drives every
+  (architecture, scenario, repetition) combination through the same
+  Milestone 11 evaluator functions — `_EVALUATE_SCENARIO`/
+  `_TO_COMMON_RESULT` hold direct references to
+  `rag_agent_evaluation.py`/`tool_agent_evaluation.py`/
+  `hybrid_agent_evaluation.py`'s real functions, verified by identity in
+  tests, never a runner-local accuracy formula; ground truth reaches
+  only the evaluator call, never `AgentRequest` [verified by AST scan];
+  one architecture's agent-construction failure is recorded as an
+  `UNKNOWN_FAILURE` run rather than aborting the batch; raw,
+  never-pre-aggregated results are persisted one JSON object per line to
+  `results/experiments/<experiment_id>/raw_results.jsonl` alongside
+  `config.json`/`manifest.json`/`summary.json`; re-running an experiment
+  without `resume=True` raises `FileExistsError`, `resume=True` appends
+  only unrecorded `(architecture, scenario_id, repetition)` keys; post-
+  run `ArchitectureSummary`/`ArchitectureComparison` aggregation and
+  cross-repetition `consistency` reused directly from Milestone 11 — the
+  first milestone to exercise that calculation with real repeated-run
+  data). CLI: `python -m src.experiments.runner --mode {mock,real}
+  [--repetitions] [--output-dir] [--scenario-ids] [--architectures]
+  [--experiment-id] [--dry-run] [--resume]`; `--dry-run` previews the
+  resolved config without executing; REAL mode probes connectivity first
+  and prints "REAL EXPERIMENT: NOT RUN" and exits cleanly (rather than
+  silently falling back to mock) when no credentials are available. An
+  18-run [3 architectures x 3 scenarios x 2 repetitions]
+  INFRASTRUCTURE-VALIDATION-ONLY mock demonstration ran 18/18 successful
+  with full per-architecture summaries, explicitly labeled "NOT FINAL
+  RESEARCH RESULTS"; the fairer, architecture-neutral canonical query
+  (deliberately less retrieval-optimized than the sportsbook-name-heavy
+  queries the Milestone 9B-11 evaluators use for their own metric
+  testing) combined with `RagOnlyAgent`'s true default `top_k=5` causes
+  RAG's mock-mode `ev_classification_accuracy` to come back `None` in
+  these demo runs — an honest, expected research-infrastructure finding
+  recorded as-is, not tuned away. Mock-mode reproducibility verified
+  record-for-record across two independent output directories
+  (excluding timestamps, experiment/run IDs, and all latency
+  measurements). No inferential statistics, no dashboard, and no changes
+  to any of the three agents' or the unified evaluator's behavior.
+
+- a Streamlit research dashboard (`dashboard/`, Milestone 13): a thin UI
+  layer over the existing agents/experiments/evaluation modules — never
+  defines a betting/quant formula, ground-truth value, or agent-behavior
+  change of its own (`dashboard/data_loader.py` constructs agents only
+  via `src.experiments.agent_factory.create_agent`, the same factory the
+  experiment runner uses; `dashboard/charts.py`/`research_view.py`
+  aggregate only through existing `src.evaluation.metrics`/
+  `hybrid_agent_evaluation.summarize_results` functions). Two modes:
+  **Demo** (`dashboard/demo_view.py`) — pick a scenario from the full
+  controlled scenario manifest (`src.experiments.config.
+  build_scenario_manifest`) and an architecture (RAG/TOOL/HYBRID), click
+  "Run Analysis" to execute it live (MOCK reuses the Milestone 9B/10B/11
+  deterministic fake-LLM policies at no API cost; REAL calls the
+  configured Anthropic model and degrades to a clear, non-crashing
+  message when no credentials are configured), and inspect the resulting
+  `BettingAnalysis`, a per-sportsbook comparison table, and the full
+  architecture trace (RAG: retrieved document IDs/rank/score/freshness;
+  Tool: tool calls with arguments/success/latency; Hybrid: both plus
+  every reconciled record's authoritative source and conflict-resolution
+  reason, with an explicit RAG-snapshot-vs-current-tool freshness-
+  conflict display). Nothing is cached across "Run Analysis" clicks
+  except the expensive, read-only Retriever/FAISS-index and
+  SportsbookTools construction (`st.cache_resource`) — every click is a
+  genuine, independent agent execution. **Research Comparison**
+  (`dashboard/research_view.py`) — loads a persisted Milestone 12
+  experiment directory (`results/experiments/<experiment_id>/`) read-
+  only and renders experiment metadata (with an unmissable "MOCK —
+  INFRASTRUCTURE VALIDATION ONLY" banner whenever `execution_mode=mock`,
+  never presented as a research finding), per-architecture summaries,
+  7 bar-chart comparisons (best-line/EV-classification/freshness
+  accuracy, completeness, unsupported-claim rate, consistency, mean
+  latency — no automatic "winner"), per-scenario drill-down (with
+  ground truth labeled "EXPECTED / GROUND TRUTH" and shown only in this
+  research context, never fed back into an agent), repetition/
+  consistency inspection, failure analysis (grouped by the Milestone 11
+  `FailureCategory` taxonomy), hybrid conflict analysis, and filterable
+  raw-result access plus optional CSV/JSON export (never overwriting the
+  original experiment files). Percentage/N/A/small-nonzero-error
+  formatting (`dashboard/formatting.py`) never displays a missing value
+  as a misleading 0. An AST-based structural test
+  (`tests/test_dashboard_structure.py`) confirms `dashboard/` defines no
+  quant/odds formula of its own and never constructs a concrete `Agent`
+  subclass directly. Verified via `streamlit.testing.v1.AppTest` end to
+  end for all three architectures (including a live freshness-conflict
+  case, S009) and the Research view (loaded a real 24-run mock
+  experiment: 3 architectures x 4 scenarios x 2 repetitions), plus a real
+  `streamlit run dashboard/app.py` server launch (HTTP 200). No live
+  sportsbook API introduced (`ControlledOddsProvider` throughout); no
+  final experiment run; no inferential statistics; no research
+  conclusion generated.
+
+- a local, real (non-Anthropic) LLM provider (`OllamaLLMClient`,
+  Pre-Milestone 14A checkpoint, `src/agents/llm_client.py`): implements
+  the same `LLMClient`/`ToolCallingLLMClient` protocols as
+  `AnthropicLLMClient` on one class (`generate_structured` via
+  schema-constrained JSON output, `create_turn` via native tool
+  calling), talking to a locally hosted Ollama server over HTTP
+  (`httpx`, no new orchestration framework). Provider selection is
+  configuration-driven (`ExperimentConfig.llm_provider`,
+  `LLMProviderName.ANTHROPIC` | `.OLLAMA`) and read by
+  `src.experiments.agent_factory.build_llm_client` — never
+  architecture-specific; RAG/TOOL/HYBRID always receive the identical
+  provider/model/temperature for a given config. Default local model:
+  `llama3.1:8b` at `temperature=0.0` (`DEFAULT_OLLAMA_MODEL`/
+  `DEFAULT_OLLAMA_TEMPERATURE`), centrally recorded as `LLM_PROVIDER`/
+  `LLM_MODEL` — never duplicated in any agent module. MOCK mode is
+  unaffected by this field (always the Milestone 9B-11 deterministic
+  fakes, regardless of `llm_provider`); local inference through
+  `OllamaLLMClient` is classified as REAL execution, never MOCK. No
+  agent (`rag_agent.py`/`tool_agent.py`/`hybrid_agent.py`), the quant
+  engine, ground truth, the RAG corpus, or evaluation metrics were
+  modified — this is a provider substitution only, verified via a live
+  end-to-end smoke run of all three architectures against the real
+  local model (`experiments/run_ollama_three_architecture_smoke_test.py`):
+  RAG (real retrieval + real local extraction, `BettingAnalysis`
+  validates), TOOL (a real tool call — `get_odds` — actually occurred,
+  not merely succeeded without one, `BettingAnalysis` validates), and
+  HYBRID (real RAG+tool workflow, `BettingAnalysis` validates; the
+  deterministic `CURRENT_TOOL_DATA_PRECEDENCE` reconciliation policy
+  itself is unmodified and independently re-verified both by a direct
+  synthetic-conflict check and by `tests/test_hybrid_reconciliation.py`
+  — the smoke run's own scenarios (S001, S009-S011) happened not to
+  surface a live source conflict this session, an honestly-reported
+  local-model-extraction observation, not a defect). 26 new tests
+  (`tests/test_ollama_llm_client.py` — message-format conversion,
+  request/response handling, bounded `OllamaRequestError` handling, all
+  against a mocked HTTP layer; `tests/test_llm_provider_selection.py` —
+  config defaulting/round-trip, per-architecture client-type identity)
+  pass with Ollama stopped, confirming standard `pytest -q` never
+  requires a running local server. A follow-up readiness-verification
+  pass (before Milestone 14A began) confirmed this integration needed
+  no rework and found one real defect: `probe_real_llm_connectivity`
+  (`src/experiments/runner.py`) was hard-coded to always build an
+  `AnthropicLLMClient` regardless of the configured provider, which
+  would have made any Ollama-configured real run always report "REAL
+  EXPERIMENT: NOT RUN" — fixed to build its probe client via
+  `build_llm_client()` (configuration-driven, like every other real-mode
+  client construction), covered by a new regression test. One artifact-
+  fingerprint gap was also closed: `src/experiments/fingerprint.py` now
+  additionally hashes `src/experiments/config.py` itself, so a change to
+  the canonical query template's wording — not just its input data —
+  is detectable in the pre/post integrity check.
+
+- Milestone 14A — freeze and run the final controlled experiment
+  (`experiments/final_experiment.json` frozen to `llm_provider=ollama`,
+  `model_name=llama3.1:8b`, `temperature=0.0`, `rag_top_k=5`,
+  `max_tool_iterations=6`, the 11-scenario `DEFAULT_SCENARIO_IDS` set,
+  `repetitions=10`, rotating execution order): the real, non-mock final
+  dataset — 3 architectures x 11 scenarios x 10 repetitions = 330
+  observations — executed via the unmodified Milestone 12
+  `run_experiment()` through a new orchestrator
+  (`experiments/run_final_experiment.py`): preflight (a full nested
+  `pytest -q`, ground-truth/quant-ground-truth regeneration-vs-file
+  diffs, a live RAG-index/retrieval smoke query, provider/tools smoke
+  checks, a direct synthetic-conflict call confirming
+  `CURRENT_TOOL_DATA_PRECEDENCE` is intact) → a provider-aware real-
+  inference connectivity probe → the run itself → pre/post artifact
+  fingerprinting (9 hashes: benchmark scenarios, both ground-truth
+  files, RAG corpus, RAG index config, both system prompts, the
+  canonical-query-template module, the frozen config file — all 9
+  MATCHED) → a full dataset validation report
+  (`src/experiments/validation.py`). Result, persisted at
+  `results/experiments/final_v1/` (`config.json`, `manifest.json`,
+  `metadata.json`, `artifact_hashes.json`, `raw_results.jsonl`,
+  `summary.json`/`descriptive_summary.json`,
+  `dataset_validation_report.json`): 330/330 expected runs recorded
+  (110 RAG / 110 TOOL / 110 HYBRID, exactly even), zero duplicate or
+  missing run keys, a complete 10/10/10 scenario-coverage matrix across
+  all 11 scenarios, zero raw-result schema-validation errors,
+  ground-truth isolation and architecture isolation both re-audited
+  PASS post-execution, and the deterministic architecture rotation
+  confirmed actually applied from the persisted
+  `execution_order_position` field (not merely assumed). 290 successful
+  observations (`quant_insufficient_data` — a validated best line
+  without enough two-sided data for an EV verdict; RAG 90, TOOL 100,
+  HYBRID 100) and 40 failed observations preserved as-recorded, never
+  dropped or retried: RAG's 20 (`insufficient_retrieved_evidence`, all
+  on the spread/total scenarios S012/S013) are a genuine
+  architecture-level evidence-pipeline gap; TOOL's 10 and HYBRID's 10
+  (all on S012) share one root cause — a client-side 180s
+  `OllamaRequestError` read-timeout on that scenario's tool-calling
+  turns — an infrastructure/runtime characteristic of this local
+  model+scenario combination, distinguished from architecture-level
+  failures via the raw `errors` field rather than reclassified after
+  the fact. Median observation latency ~16.2s (mean ~24.8s, range
+  3.7s-183.9s) confirms genuine local inference throughout, never the
+  deterministic mock policies. Zero hybrid source conflicts were
+  recorded across all 110 hybrid observations in this dataset — the
+  reconciliation policy itself remains independently verified intact
+  (synthetic direct call + the unmodified, fully-passing
+  `tests/test_hybrid_reconciliation.py`); this is a real, honestly-
+  reported characteristic of how this local model's RAG-side extraction
+  interacts with the existing, unmodified provenance validator, not a
+  defect. No agent, prompt, quant formula, ground truth, RAG corpus, or
+  evaluation metric was modified during or after execution (confirmed
+  via `git diff` and the 9-way pre/post hash match). No arbitrary
+  retries; no inferential statistics performed; no "winning"
+  architecture declared. Dataset explicitly validated eligible for
+  Milestone 14B's statistical analysis.
+
+- Milestone 14B — statistical analysis and research findings
+  (`src/analysis/`, read-only against `results/experiments/final_v1/` —
+  never modifies raw_results.jsonl/config.json/manifest.json, verified
+  by file-hash/mtime checks and a dedicated test): paired alignment by
+  (scenario_id, repetition) across architectures and by scenario_id
+  alone for consistency (`pairing.py`); Wilson score confidence
+  intervals (`confidence_intervals.py`); exact-binomial McNemar,
+  Wilcoxon signed-rank, and Holm-Bonferroni correction
+  (`pairwise_tests.py`, via `scipy.stats`); Friedman omnibus
+  (`omnibus_tests.py`); a frozen metric-family framework — 4 binary
+  metrics (best-line/best-odds/EV-classification/freshness correctness)
+  via McNemar, 4 continuous metrics (EV/market-reference absolute
+  error, completeness, total latency) via Wilcoxon, 3 omnibus metrics
+  (completeness, latency, consistency) via Friedman — each of the 3
+  architecture pairs Holm-corrected within its own metric family, never
+  pooled globally (`comparisons.py`). Every metric formula is reused
+  directly from `src.evaluation.metrics`/
+  `hybrid_agent_evaluation.summarize_results` (Milestone 11), never
+  redefined. Two real bugs were found by new synthetic tests (never
+  hard-coded to the actual final result) and fixed before touching the
+  real dataset's output: `loading.py` crashed with a raw pydantic
+  exception instead of `FinalDatasetInvalidError` on a corrupted raw
+  record (fixed to reuse `validation.load_and_validate_raw_results`
+  rather than a second raw-line parser); `omnibus_tests.py`'s Friedman
+  degeneracy check conflated "every block holds an identical triple"
+  (a maximally significant, perfectly-consistent-ranking case) with
+  "every block is a three-way tie" (the true zero-variance case scipy
+  can't compute), misreporting the former as "no variation, p=1.0"
+  (fixed to check within-block ties only, and to detect scipy's silent
+  NaN return for genuine degeneracy). `python -m src.analysis.
+  final_analysis` is the one reproducible entry point, writing 8
+  machine-readable files, 6 figures (Wilson-interval error bars, N/A
+  rendered as an honest label rather than a misleading zero-height bar,
+  no 3D), and `findings.md` to `results/experiments/final_v1/analysis/`.
+  Result: every EV-classification/EV-error/market-reference-error
+  comparison correctly reports N/A (zero observations in the frozen
+  dataset ever reached a full quant verdict) rather than a fabricated
+  p-value; RAG's best-line/best-odds accuracy (88.9%) is significantly
+  lower than TOOL/HYBRID's (100%, Holm-adjusted p=0.0059) while TOOL and
+  HYBRID are statistically indistinguishable from each other (p=1.0,
+  zero discordant pairs); freshness (100% for all three) and
+  consistency (1.0 for all three, Friedman correctly degenerate) show no
+  distinguishable difference; RAG's completeness (72.7%) is
+  significantly lower than TOOL/HYBRID's (90.9%); latency differs
+  significantly across all three pairs (TOOL fastest, HYBRID slowest);
+  zero hallucinations; hybrid conflict-resolution accuracy is correctly
+  N/A (zero live conflicts in this dataset). `findings.md` answers the
+  research question directly without forcing a universal winner,
+  distinguishes statistical from practical significance throughout,
+  documents limitations including local-model-specific capability
+  findings, and includes the independent predictive-ML-model extension
+  as documented future work — not implemented. No agent, prompt, quant
+  formula, ground truth, or evaluation metric was modified; no selective
+  rerunning; 70 new tests, all synthetic-data-based.
+
+- Milestone 15 — research conclusions, manuscript, and presentation
+  support (`docs/`, documentation-only — no agent, prompt, model
+  configuration, scenario, raw result, ground truth, statistical test,
+  or metric definition was modified; verified via `git diff` and file
+  mtime checks against `results/experiments/final_v1/`): every numeric
+  claim in the new documents is traced directly to a fresh read of
+  `results/experiments/final_v1/analysis/`, never reconstructed from
+  memory. `docs/FINAL_RESEARCH_SUMMARY.md` (research question,
+  experimental design, the 6-step quant pipeline, primary/secondary
+  results reproduced verbatim from `findings.md`, a direct
+  evidence-calibrated answer to the research question, limitations,
+  future work including the ML-predictive-model extension diagram —
+  explicitly not implemented); `docs/MANUSCRIPT_OUTLINE.md` (structural
+  outline, Methods 3.1-3.7 limited to methods actually used);
+  `docs/MANUSCRIPT_DRAFT.md` (~450-line first-draft manuscript — Abstract
+  through Conclusion, 8 `[CITATION NEEDED]` markers for literature
+  claims, zero fabricated citations or statistics, every number
+  cross-verified against `pairwise_comparisons.json`/
+  `descriptive_statistics.json`); `docs/PRESENTATION_STORYBOARD.md`
+  (12-slide content plan, not slides); `docs/RESULTS_ASSET_INDEX.md`
+  (full inventory of Figures 1-6/Tables 1-5/omnibus table with path,
+  contents, manuscript section, presentation slide, source artifact);
+  `docs/REPRODUCIBILITY.md` (10-step workflow, MOCK vs. REAL execution
+  mode explicitly distinguished, no secrets embedded);
+  `docs/CITATION_NEEDS.md` (10-row audit of every `[CITATION NEEDED]`
+  marker — no sources searched, browsed, or invented). `docs/
+  ARCHITECTURE.md` rewritten (previously stale since Milestone 6C —
+  described the RAG pipeline, agents, quant engine, and dashboard as
+  "future" despite being fully implemented since Milestones 6C-13; now
+  reflects the completed system, including the Milestone 12
+  `src/experiments/` and Milestone 14B `src/analysis/` layers it
+  previously omitted) — no working implementation code changed.
+  Terminology audit (Section 11): market-implied/no-vig consensus
+  probability is never conflated with true win probability across all
+  new documents, zero instances of forbidden absolute language
+  ("proved," "guarantee(s/d)," "always better"), and every "positive
+  EV"/profitability reference is correctly scoped to this project's own
+  methodology, never claiming real-world profitability. Conclusion audit
+  (Section 12): no architecture is declared a universal winner; the
+  stated conclusion is evidence-calibrated (TOOL/HYBRID beat RAG on
+  accuracy/completeness, TOOL beats HYBRID on latency,
+  consistency/freshness indistinguishable across all three) with
+  tradeoffs stated explicitly. Full pytest suite re-run at the end of
+  this milestone: 1097 passed / 0 failed, confirming the
+  documentation-only work did not alter application behavior.
+
 The project does **not** yet have:
 
-- an experiment runner
-- a dashboard
+- live sportsbook API integration (an optional future extension, behind
+  the existing `OddsProvider` abstraction)
+- an independently trained/calibrated predictive ML model compared
+  against the market-implied no-vig consensus (documented future work,
+  not implemented — see `docs/FINAL_RESEARCH_SUMMARY.md`)
+- filled-in citations for the `[CITATION NEEDED]` markers in
+  `docs/MANUSCRIPT_DRAFT.md` (tracked in `docs/CITATION_NEEDS.md`;
+  explicitly deferred, no sources searched or invented)
 
 ## Important Decisions
 

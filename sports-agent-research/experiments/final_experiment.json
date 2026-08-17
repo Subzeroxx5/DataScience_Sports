@@ -1,0 +1,45 @@
+{
+  "final_experiment_plan_version": "1.1",
+  "frozen_by_milestone": "14A",
+  "config": {
+    "experiment_id": "final_v1",
+    "experiment_name": "final_controlled_experiment_v1",
+    "architectures": ["rag", "tool", "hybrid"],
+    "scenario_ids": [
+      "S001", "S002", "S003", "S004", "S005",
+      "S006", "S007", "S008", "S009", "S012", "S013"
+    ],
+    "repetitions": 10,
+    "llm_provider": "ollama",
+    "model_name": "llama3.1:8b",
+    "temperature": 0.0,
+    "effort": "low",
+    "rag_top_k": 5,
+    "max_tool_iterations": 6,
+    "output_dir": "results/experiments",
+    "execution_mode": "real",
+    "execution_order_policy": "rotating",
+    "provider_type": "ControlledOddsProvider",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "quant_methodology_version": "market_consensus_leave_one_out_v1"
+  },
+  "expected_run_count": 330,
+  "notes": {
+    "repetition_rationale": "10 repetitions per (architecture, scenario) was not derived from any project documentation specifying a repetition count, so the Milestone 14A default of 10 is used: enough repeated observations for a meaningful consistency measurement (src.evaluation.metrics.compute_consistency), a manageable real-inference time budget relative to the controlled 11-scenario x 3-architecture design, and substantially stronger than a one-shot evaluation. This is a pragmatic experimental-design choice, not a claim that 10 is statistically optimal.",
+    "scenario_set_rationale": "Reuses DEFAULT_SCENARIO_IDS (src/evaluation/tool_agent_evaluation.py) verbatim rather than defining a new scenario subset for this milestone: the same representative 11-scenario controlled-benchmark subset already established and exercised throughout Milestones 9B-13 (positive/negative/mixed-sign odds, a best-line tie, a missing-sportsbook case, a current/stale freshness case, moneyline/spread/total markets, quant-evaluable positive- and negative-EV cases). The 3 excluded scenarios from the full 14-scenario benchmark (S010/S011: additional freshness cases duplicating S009's category; S014: a hand-verification-only positive-odds case duplicating S001's category) were excluded from this representative subset for that reason at the time DEFAULT_SCENARIO_IDS was defined, not newly excluded here to influence final results.",
+    "architecture_order_rationale": "architectures is left in DEFAULT_ARCHITECTURE_ORDER ([rag, tool, hybrid]) — src.experiments.config.execution_order_for_repetition() rotates this list deterministically per repetition (Milestone 12), so this ordering only fixes repetition 1's order; it is not a fixed running order for the whole experiment.",
+    "provider_change_v1_1": "Pre-Milestone 14A 'Local Real-LLM Backend' checkpoint: llm_provider/model_name/temperature changed from the Anthropic API (claude-opus-4-8, effort=low) to a locally hosted Ollama model (llama3.1:8b, temperature=0.0) so the final experiment can run without per-call API cost. This edit was made BEFORE any run under experiment_id=final_v1 was ever started (results/experiments/final_v1/ does not exist) — Milestone 14A's own rule against changing settings mid-experiment does not apply; this is pre-run preparation, per that checkpoint's own Step 11. effort=low is left in the config for documentation continuity but is inert/ignored by OllamaLLMClient (Anthropic-only field).",
+    "model_choice_rationale": "llama3.1:8b was selected as the ONE model for all three architectures after verifying locally (not merely assumed) that it supports both schema-constrained structured JSON output (RAG's generate_structured) and native multi-turn tool calling, including a full tool-call -> tool-result -> final-answer round trip (TOOL/HYBRID's create_turn) — see experiments/run_ollama_three_architecture_smoke_test.py and its passing run against all three architectures. temperature=0.0 is Ollama's lowest-deterministic-setting lever (DEFAULT_OLLAMA_TEMPERATURE), the equivalent role effort=low played for the Anthropic provider.",
+    "canonical_query_template": "Compare the available {market_type} prices for {selected_outcome} and identify the best current value. (src.experiments.config._canonical_query — takes no architecture parameter; identical wording reaches all three architectures for a given scenario.)",
+    "prompt_constants": {
+      "rag_extraction_system_prompt": "src.agents.extraction.RAG_EXTRACTION_SYSTEM_PROMPT",
+      "tool_agent_system_prompt": "src.agents.tool_agent.TOOL_AGENT_SYSTEM_PROMPT",
+      "hybrid_agent": "uses both prompt constants above verbatim (src.agents.hybrid_agent) — no separate hybrid-specific prompt exists",
+      "hash_capture": "sha256 hashes of both prompt constants' literal string content are captured by src.experiments.fingerprint.compute_final_experiment_fingerprints() and stored in the run's metadata.json, compared before/after execution (Section 24)."
+    },
+    "output_directory_convention": "output_dir + experiment_id = results/experiments/final_v1/ — satisfies the milestone's 'results/experiments/final_<experiment_id>/' convention via the experiment_id itself carrying the final_ prefix, without needing a runner.py directory-naming change.",
+    "frozen_at_git_commit": "f10719053caaa358f67f66a423194d421e050908",
+    "frozen_with_uncommitted_changes": true,
+    "uncommitted_changes_note": "Milestones 12 and 13's code (src/experiments/, dashboard/, associated tests), this Pre-14A local-provider checkpoint's changes, and this config edit are NOT committed as of freezing this config — see the run's environment_metadata.json (git_status/git_diff_stat) for the exact traceable working-tree state at run time. Per project convention, commits are only made when the user explicitly requests one."
+  }
+}

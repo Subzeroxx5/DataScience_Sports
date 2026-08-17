@@ -19,11 +19,20 @@
 10A  Hybrid RAG + tool-calling agent core               COMPLETE
 10B  Hybrid agent end-to-end verification               COMPLETE
 11   Unified evaluation framework                       COMPLETE
-12   Controlled experiment runner                        CURRENT
-13   Dashboard / visualization
-14   Full controlled experiment + statistical analysis
-15   Research conclusions / manuscript / presentation
+12   Controlled experiment runner                        COMPLETE
+13   Dashboard and research visualization                COMPLETE
+14A  Freeze and run the final controlled experiment      COMPLETE
+14B  Statistical analysis and research findings          COMPLETE
+15   Research conclusions, manuscript, and presentation support COMPLETE
 ```
+
+**Project roadmap: COMPLETE.** All 15 planned milestones are finished.
+Remaining items (live sportsbook providers, broader scenario coverage,
+alternative LLMs, an independently trained/calibrated predictive ML
+model) are documented future work — see "Future Work" in
+`docs/FINAL_RESEARCH_SUMMARY.md` and `docs/MANUSCRIPT_DRAFT.md` — not an
+open or implied next milestone. See `milestones/current.md` for
+confirmation that no new implementation milestone is active.
 
 Milestones may be subdivided or consolidated when that improves
 verification, debugging, or implementation efficiency. Scope must always
