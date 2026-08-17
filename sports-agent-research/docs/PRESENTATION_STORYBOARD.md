@@ -29,7 +29,9 @@ Display prominently, verbatim:
 > "How does agent architecture—tool calling, retrieval-augmented generation
 > (RAG), or a hybrid approach—affect the accuracy, consistency, and
 > freshness of an AI agent identifying positive expected value
-> opportunities across multiple sportsbooks?"
+> opportunities across multiple sportsbooks?
+> Can an LLM-assisted betting tracker reliably identify best available sportsbook lines?
+> Can a local Ollama model, specifically llama3.1:8b, handle the orchestration reliably? 
 
 ## Slide 4 — Experimental Design
 
