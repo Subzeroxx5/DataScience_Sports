@@ -1,8 +1,11 @@
 # Sports Agent Research
 
-## Research Question
+## Research Questions
 
 **How does agent architecture—tool calling, retrieval-augmented generation (RAG), or a hybrid approach—affect the accuracy, consistency, and freshness of an AI agent identifying positive expected value opportunities across multiple sportsbooks?**
+Can an LLM-assisted betting tracker reliably identify best available sportsbook lines?
+Which architecture performs best: RAG, TOOL, or HYBRID?
+Can a local Ollama model, specifically llama3.1:8b, handle the orchestration reliably enough?
 
 ## Purpose
 
