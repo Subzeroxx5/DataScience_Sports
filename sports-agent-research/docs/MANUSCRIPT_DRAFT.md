@@ -1,7 +1,10 @@
 *First-draft manuscript. Every numerical claim below is traceable to
 `results/experiments/final_v1/analysis/` (Milestone 14B) — none is
-recalculated or estimated here. Literature claims needing external sources
-are marked [CITATION NEEDED]; see `docs/CITATION_NEEDS.md`. This is an
+recalculated or estimated here. Literature claims are cited inline
+(Author, Year); full bibliographic entries are in the References section
+at the end. Sources were located and verified via web search against
+their original abstract/publication pages — see `docs/CITATION_NEEDS.md`
+for the mapping from each claim to its source. This is an
 undergraduate/intern-research-report-style first draft, not a
 publication-ready manuscript.*
 
@@ -13,7 +16,7 @@ publication-ready manuscript.*
 
 Large language model (LLM) agents increasingly rely on external information
 — retrieved documents, callable tools, or both — to answer questions that
-require current, verifiable data [CITATION NEEDED]. We ask: how does agent
+require current, verifiable data (Wang et al., 2023). We ask: how does agent
 architecture (retrieval-augmented generation, tool calling, or a hybrid of
 the two) affect the accuracy, consistency, and freshness of an AI agent
 identifying positive expected value opportunities across multiple
@@ -54,9 +57,10 @@ though it is not a claim about the true probability of the sporting outcome.
 
 Modern LLM agents obtain external information in at least two structurally
 different ways: retrieval-augmented generation (RAG), where the model reads
-snippets pulled from a document corpus [CITATION NEEDED], and tool calling
-(function calling), where the model invokes structured operations that
-return exact, typed data [CITATION NEEDED]. Hybrid designs combine both.
+snippets pulled from a document corpus (Lewis et al., 2020), and tool
+calling (function calling), where the model invokes structured operations
+that return exact, typed data (Schick et al., 2023). Hybrid designs
+combine both.
 Each approach has different failure modes: retrieval can surface stale or
 incomplete evidence without the model necessarily recognizing it as stale;
 tool calling depends on the model reliably orchestrating multiple calls in
@@ -82,35 +86,36 @@ model.
 
 Large language model agents that answer questions using external,
 non-parametric knowledge sources have become a common design pattern
-[CITATION NEEDED]. Retrieval-augmented generation supplies the model with
-passages retrieved from a corpus via semantic (embedding) similarity search
-[CITATION NEEDED]. Tool calling (also called function calling) instead lets
-the model invoke predefined operations with structured arguments and
-receive structured results, which can make the model's final answer
-traceable to an exact data source rather than to free-form generated text
-[CITATION NEEDED]. Hybrid agents that combine both channels, and that must
-reconcile disagreements between them, are a comparatively less studied
-design point [CITATION NEEDED].
+(Wang et al., 2023). Retrieval-augmented generation supplies the model
+with passages retrieved from a corpus via semantic (embedding) similarity
+search (Lewis et al., 2020). Tool calling (also called function calling)
+instead lets the model invoke predefined operations with structured
+arguments and receive structured results, which can make the model's
+final answer traceable to an exact data source rather than to free-form
+generated text (Schick et al., 2023). Hybrid agents that combine both
+channels, and that must reconcile disagreements between them, are a
+comparatively less studied design point (Singh et al., 2025).
 
 Sportsbook betting markets quote prices as American odds, which imply a
 probability once converted; because sportsbooks build in a margin (the
 "vig" or "overround"), the raw implied probabilities across a market's
 outcomes sum to more than 1.0, and must be normalized ("no-vig" or "fair"
 probabilities) before they can be used as a probability reference
-[CITATION NEEDED]. A market-consensus reference probability — an average of
-no-vig probabilities across sportsbooks, often computed leaving out the
-sportsbook under evaluation to avoid circularity — is one common way to
-estimate a "fair" price against which a specific sportsbook's price can be
-compared for value [CITATION NEEDED]. Expected value (EV) relative to such
-a reference is a standard framing for identifying favorably priced bets,
-though it is important to note that a market-consensus probability is not
-a claim about the true probability of the underlying sporting outcome
-[CITATION NEEDED].
+(Shin, 1993; Štrumbelj, 2014). A market-consensus reference probability —
+an average of no-vig probabilities across sportsbooks, often computed
+leaving out the sportsbook under evaluation to avoid circularity — is one
+common way to estimate a "fair" price against which a specific
+sportsbook's price can be compared for value (Wolfers & Zitzewitz, 2004).
+Expected value (EV) relative to such a reference is a standard framing for
+identifying favorably priced bets, though it is important to note that a
+market-consensus probability is not a claim about the true probability of
+the underlying sporting outcome — bookmakers set prices to manage their
+own risk, not solely to forecast outcomes (Levitt, 2004).
 
 Finally, LLM output reliability — including the tendency of models to state
 claims not supported by their actual inputs ("hallucination") — is a
 relevant concern whenever an agent's output feeds into a decision with real
-consequences [CITATION NEEDED]. Our architecture designs are built so that
+consequences (Huang et al., 2023). Our architecture designs are built so that
 the final structured output can only contain data that was itself returned
 by a validated tool call or a provenance-checked retrieval, structurally
 limiting (though not by itself proving the absence of) this failure mode.
@@ -452,3 +457,39 @@ tool-calling and hybrid over RAG-only) and latency (favoring tool-calling
 over hybrid), but did not produce a measurable difference in consistency or
 freshness in this controlled experiment — so the answer is architecture-
 and metric-dependent, not a single ranking.
+
+## References
+
+All entries below were located and verified against their original
+abstract/publication page (arXiv, NeurIPS proceedings, or journal page) via
+web search; none is cited from memory alone. See `docs/CITATION_NEEDS.md`
+for the mapping from each manuscript claim to its source.
+
+- Huang, L., Yu, W., Ma, W., Zhong, W., Feng, Z., Wang, H., Chen, Q.,
+  Peng, W., Feng, X., Qin, B., & Liu, T. (2023). *A Survey on Hallucination
+  in Large Language Models: Principles, Taxonomy, Challenges, and Open
+  Questions*. arXiv:2311.05232.
+- Levitt, S. D. (2004). Why Are Gambling Markets Organised So Differently
+  from Financial Markets? *The Economic Journal*, 114(495), 223–246.
+- Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N.,
+  Küttler, H., Lewis, M., Yih, W., Rocktäschel, T., Riedel, S., & Kiela, D.
+  (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP
+  Tasks. *Advances in Neural Information Processing Systems (NeurIPS) 33*.
+  arXiv:2005.11401.
+- Schick, T., Dwivedi-Yu, J., Dessì, R., Raileanu, R., Lomeli, M.,
+  Zettlemoyer, L., Cancedda, N., & Scialom, T. (2023). *Toolformer:
+  Language Models Can Teach Themselves to Use Tools*. arXiv:2302.04761.
+- Shin, H. S. (1993). Measuring the Incidence of Insider Trading in a
+  Market for State-Contingent Claims. *The Economic Journal*, 103(420),
+  1141–1153.
+- Singh, A., Ehtesham, A., Kumar, S., Khoei, T. T., & Vasilakos, A. V.
+  (2025). *Agentic Retrieval-Augmented Generation: A Survey on Agentic
+  RAG*. arXiv:2501.09136.
+- Štrumbelj, E. (2014). On Determining Probability Forecasts from Betting
+  Odds. *International Journal of Forecasting*, 30(4), 934–943.
+- Wang, L., Ma, C., Feng, X., Zhang, Z., Yang, H., Zhang, J., Chen, Z.,
+  Tang, J., Chen, X., Lin, Y., Zhao, W. X., Wei, Z., & Wen, J. (2023).
+  *A Survey on Large Language Model based Autonomous Agents*.
+  arXiv:2308.11432.
+- Wolfers, J., & Zitzewitz, E. (2004). Prediction Markets. *Journal of
+  Economic Perspectives*, 18(2), 107–126.

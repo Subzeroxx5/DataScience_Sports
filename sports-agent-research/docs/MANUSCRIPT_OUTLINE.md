@@ -58,20 +58,22 @@ Outline (no fabricated numbers — see draft for actual cited values):
 
 # 2. Background / Related Concepts
 
-*(Suitable for later citation work — literature claims marked [CITATION
-NEEDED]; see `docs/CITATION_NEEDS.md` for the full audit.)*
+*(Citations filled in — see `docs/CITATION_NEEDS.md` for the mapping from
+each claim to its source and verification method; full bibliographic
+entries are in `docs/MANUSCRIPT_DRAFT.md`'s References section.)*
 
-- LLM agents and external information access. [CITATION NEEDED]
-- Retrieval-augmented generation (RAG). [CITATION NEEDED]
-- Tool-calling / function-calling agents. [CITATION NEEDED]
-- Hybrid RAG + tool-calling architectures. [CITATION NEEDED]
+- LLM agents and external information access. (Wang et al., 2023)
+- Retrieval-augmented generation (RAG). (Lewis et al., 2020)
+- Tool-calling / function-calling agents. (Schick et al., 2023)
+- Hybrid RAG + tool-calling architectures. (Singh et al., 2025)
 - Sportsbook odds and implied probability (American odds convention,
-  overround/vig). [CITATION NEEDED]
-- No-vig (fair) probability normalization and market consensus. [CITATION
-  NEEDED]
-- Expected value in a betting-markets context. [CITATION NEEDED]
-- LLM output reliability / hallucination in agentic contexts. [CITATION
-  NEEDED]
+  overround/vig). (Shin, 1993; Štrumbelj, 2014)
+- No-vig (fair) probability normalization and market consensus.
+  (Štrumbelj, 2014; Wolfers & Zitzewitz, 2004)
+- Expected value in a betting-markets context / market-consensus vs. true
+  probability. (Levitt, 2004)
+- LLM output reliability / hallucination in agentic contexts. (Huang et
+  al., 2023)
 
 # 3. Methods
 
